@@ -1,0 +1,158 @@
+# ============================================================
+# .htaccess - Configuración de seguridad y rewrite rules
+# Landing Page Profesional Universal
+# ============================================================
+
+# Deshabilitar listado de directorios
+Options -Indexes
+Options -MultiViews
+
+# Configurar charset por defecto
+AddDefaultCharset UTF-8
+
+# ============================================================
+# BLOQUEO DE ACCESO A DIRECTORIOS SENSIBLES
+# ============================================================
+
+RewriteEngine On
+
+# Bloquear acceso a directorios sensibles
+RewriteRule ^database/ - [F,L]
+RewriteRule ^app/ - [F,L]
+RewriteRule ^logs/ - [F,L]
+
+# Bloquear acceso directo a archivos PHP excepto index.php
+RewriteCond %{THE_REQUEST} \.php
+RewriteCond %{REQUEST_URI} !^/index\.php$
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule \.php$ - [F,L]
+
+# Bloquear acceso a archivos de configuración y base de datos
+RewriteRule ^config\.php$ - [F,L]
+RewriteRule \.db$ - [F,L]
+RewriteRule \.log$ - [F,L]
+RewriteRule \.sqlite$ - [F,L]
+RewriteRule \.md$ - [F,L]
+
+# Bloquear acceso a archivos ocultos (excepto .htaccess)
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule ^\.(?!htaccess) - [F,L]
+
+# ============================================================
+# FRONT CONTROLLER - Redirigir todo a index.php
+# ============================================================
+
+# No aplicar rewrite a archivos y directorios existentes en /public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# ============================================================
+# HEADERS DE SEGURIDAD
+# ============================================================
+
+<IfModule mod_headers.c>
+    # Prevenir clickjacking
+    Header always set X-Frame-Options "DENY"
+    
+    # Prevenir MIME-sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Política de referencia
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Deshabilitar APIs del navegador que no usamos
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    
+    # Ocultar información del servidor
+    Header always unset X-Powered-By
+    Header always unset Server
+    
+    # XSS Protection (para navegadores antiguos)
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Content Security Policy
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.tailwindcss.com unpkg.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com cdn.tailwindcss.com; font-src 'self' fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+</IfModule>
+
+# ============================================================
+# COMPRESIÓN GZIP
+# ============================================================
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ============================================================
+# CACHE DE ARCHIVOS ESTÁTICOS
+# ============================================================
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # CSS y JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    
+    # Imágenes
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # Fuentes
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # HTML - no cachear para contenido dinámico
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ============================================================
+# PREVENIR HOTLINKING DE IMÁGENES (opcional)
+# ============================================================
+
+# <IfModule mod_rewrite.c>
+#     RewriteCond %{HTTP_REFERER} !^$
+#     RewriteCond %{HTTP_REFERER} !^https?://(www\.)?tudominio\.com [NC]
+#     RewriteRule \.(jpg|jpeg|png|gif|webp)$ - [F,NC,L]
+# </IfModule>
+
+# ============================================================
+# PROTECCIÓN ADICIONAL
+# ============================================================
+
+# Deshabilitar la ejecución de scripts en directorios de uploads (si existieran)
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|htm|html|shtml|sh|cgi)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Permitir solo index.php
+<Files "index.php">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Allow from all
+    </IfModule>
+</Files>

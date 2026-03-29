@@ -1,0 +1,312 @@
+/**
+ * admin.css - Estilos del Panel de Administración
+ * 
+ * Estilos adicionales para complementar TailwindCSS
+ */
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+#sidebar {
+    z-index: 40;
+}
+
+@media (max-width: 1023px) {
+    #sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 39;
+    }
+}
+
+/* ============================================================
+   STATUS SELECT STYLING
+   ============================================================ */
+
+.lead-status-select,
+.appointment-status-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    padding-right: 28px;
+}
+
+.lead-status-select:focus,
+.appointment-status-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================================
+   TABLE STYLES
+   ============================================================ */
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+/* ============================================================
+   MODAL TRANSITIONS
+   ============================================================ */
+
+#lead-modal,
+#appointment-modal,
+#delete-modal {
+    transition: opacity 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#lead-modal.show,
+#appointment-modal.show,
+#delete-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#lead-modal > div:last-child,
+#appointment-modal > div:last-child,
+#delete-modal > div:last-child {
+    transition: transform 0.2s ease;
+    transform: scale(0.95);
+}
+
+#lead-modal.show > div:last-child,
+#appointment-modal.show > div:last-child,
+#delete-modal.show > div:last-child {
+    transform: scale(1);
+}
+
+/* ============================================================
+   LOADING STATES
+   ============================================================ */
+
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e5e7eb;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================================
+   NOTIFICATIONS / TOASTS
+   ============================================================ */
+
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.toast {
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideIn 0.3s ease;
+    max-width: 400px;
+}
+
+.toast.success {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+}
+
+.toast.error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.toast.warning {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+.toast.info {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toast.hiding {
+    animation: slideOut 0.3s ease forwards;
+}
+
+/* ============================================================
+   DETAIL VIEW STYLES
+   ============================================================ */
+
+.detail-row {
+    display: flex;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    flex: 0 0 140px;
+    font-weight: 500;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.detail-value {
+    flex: 1;
+    color: #111827;
+}
+
+.detail-value.message {
+    white-space: pre-wrap;
+    background: #f9fafb;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+
+@media (max-width: 640px) {
+    .detail-row {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .detail-label {
+        flex: none;
+    }
+    
+    table th,
+    table td {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+
+@media print {
+    #sidebar,
+    header,
+    .toast-container,
+    button,
+    select {
+        display: none !important;
+    }
+    
+    main {
+        padding: 0 !important;
+    }
+    
+    .bg-white {
+        box-shadow: none !important;
+    }
+}

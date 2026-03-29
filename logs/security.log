@@ -1,0 +1,5 @@
+[2026-03-23 03:28:56] [LOGIN_FAILED] [::1] Usuario no encontrado | Context: {"username":"Mauricio"} | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36
+[2026-03-23 03:29:24] [LOGIN_FAILED] [::1] Usuario no encontrado | Context: {"username":"Mauricio"} | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36
+[2026-03-23 03:30:14] [LOGIN_SUCCESS] [::1] Login exitoso | Context: {"username":"admin"} | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36
+[2026-03-23 03:42:46] [LOGIN_SUCCESS] [::1] Login exitoso | Context: {"username":"admin"} | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36
+[2026-03-23 05:23:12] [LOGIN_SUCCESS] [::1] Login exitoso | Context: {"username":"admin"} | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36
